@@ -1,0 +1,11 @@
+= How to Choose Tools
+
+:icons: font
+
+* Integration with IDE/CI/CD
+* Cost: open-source vs paid
+* Ecosystem & community
+* Security & compliance needs
+
+'''
+link:100_Real_World_Impact.adoc[Previous] | link:120_Key_Takeaways.adoc[Next]

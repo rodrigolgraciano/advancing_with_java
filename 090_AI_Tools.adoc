@@ -1,0 +1,8 @@
+== AI Tools
+
+* AI Agents – assists coding & testing
+* Amazon Q → https://aws.amazon.com/q
+* Windsurf → https://windsurf.ai
+
+'''
+link:080_Technical_Debt_and_Modernization.adoc[Previous] | link:100_Real_World_Impact.adoc[Next]

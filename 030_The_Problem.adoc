@@ -1,0 +1,13 @@
+= The Problem
+
+:icons: font
+
+[.big]
+== What causes this non-coding work?
+=== ⏺ &nbsp; Handling vulnerabilities, upgrades, audits
+=== ⏺ &nbsp; Quality metrics: coverage, tech debt, security
+
+'''
+====
+link:020_The_Developer_Reality.adoc[Previous] | link:040_The_Good_News.adoc[Next]
+====

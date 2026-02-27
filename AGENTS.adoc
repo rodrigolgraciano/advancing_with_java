@@ -1,0 +1,36 @@
+= List of Agents prompts
+
+== How can I determine a common file to provide instructions to all code-generation AI agents?
+
+There isn’t *one* repo file that **every** coding assistant reads today — each product has its own “auto-loaded instructions” mechanism. The closest thing to a cross-agent **common** file is:
+
+=== Use `AGENTS.md` as your canonical “instructions for agents” file
+
+`AGENTS.md` is an open, tool-agnostic convention meant to be a “README for coding agents,” and it supports nesting (so subprojects can override the root guidance). (link:https://agents.md/[Agents])
+
+It’s also directly supported by major agentic tools:
+
+* **OpenAI Codex** reads `AGENTS.md` files before work (and supports layered overrides). (link:https://developers.openai.com/codex/guides/agents-md/[OpenAI Developers])
+* **GitHub Copilot coding agent** supports `AGENTS.md` (and still supports Copilot’s own instruction formats). (link:https://github.blog/changelog/2025-08-28-copilot-coding-agent-now-supports-agents-md-custom-instructions/[The GitHub Blog])
+
+=== Then add thin “adapter” files for tools that *don’t* read `AGENTS.md`
+
+Keep `AGENTS.md` as the source of truth, and duplicate the *top 10–20% most important rules* into each tool’s native file:
+
+* **GitHub Copilot Chat / IDE Copilot**: `.github/copilot-instructions.md` (link:https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot[GitHub Docs])
+  (Optionally add targeted rules in `.github/instructions/*.instructions.md` with `applyTo` globs.) (link:https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot[GitHub Docs])
+* **Claude Code**: `CLAUDE.md` (auto-discovered recursively). (link:https://code.claude.com/docs/en/memory[Claude])
+* **Cursor**: `.cursorrules` (many teams use this) or Cursor “Rules” files. (link:https://sbstjn.com/blog/ai-code-companion-cursor-rules/[sbstjn.com])
+
+=== What to put in `AGENTS.md` (so it actually works)
+
+Make it **short, concrete, testable**:
+
+* Setup: exact build/test commands
+* Definition of done: “tests + lint + format + security checks”
+* Repo conventions: architecture rules, naming, where code lives
+* Quality gates: e.g., “must satisfy Sonar rules / no new criticals”
+* Safe defaults: how to mock external deps, how to run locally
+* PR expectations: tests updated, changelog notes, etc.
+
+If you want a practical approach: write a solid root `AGENTS.md`, then copy a small “Key rules” section into `.github/copilot-instructions.md`, `CLAUDE.md`, and `.cursorrules` so whichever agent your team uses gets the same non-negotiables.

@@ -1,0 +1,22 @@
+= Technical Debt & Modernization
+
+== OpenRewrite
+
+* Recipes for automated Java/Spring migrations
+* OSS foundation, scalable
+* Requires recipe upkeep
+
+== Sourcegraph
+
+* Automates large-scale code modifications
+* Integrates with code hosts (GitHub, GitLab, Bitbucket, etc.)
+* Commercial license
+
+== Manual Refactoring
+
+* Full control
+* Very time-consuming
+* Error-prone and inconsistent
+
+'''
+link:070_Unit_Testing_and_Coverage.adoc[Previous] | link:090_AI_Tools.adoc[Next]

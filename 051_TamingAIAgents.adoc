@@ -1,0 +1,10 @@
+= Taming the AI Agents
+
+:icons: font
+
+[.big]
+== AI Agents can help!
+
+=== AI Agents need guidance
+=== Guidance comes in the form of a markdown file
+=== Let's see some more info

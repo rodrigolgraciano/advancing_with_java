@@ -1,0 +1,59 @@
+how can I suggest copilot to comply with sonarqube rules in agents.md
+
+To steer **Copilot coding agent** toward **SonarQube compliance**, put explicit “definition of done” + “how to validate” instructions in an **`AGENTS.md`** file (note the casing). Copilot supports `AGENTS.md` (including **nested** ones, where the nearest file in the directory tree wins). ([GitHub Docs][1])
+
+### What to add to `AGENTS.md` (practical + enforceable)
+
+1. **Make SonarQube a gate**: “No new Blocker/Critical/Major issues; fix any issues in code you touch; no ‘quick suppressions’.”
+2. **Tell it how to check** (commands that match your repo/CI).
+3. **Tell it what to do when it can’t run Sonar** (e.g., still refactor for common Sonar patterns; call out risks in PR description).
+
+Here’s a copy/paste section you can drop into `AGENTS.md`:
+
+```md
+# Code Quality: SonarQube (MUST FOLLOW)
+
+## Definition of Done (DoD)
+- Changes MUST pass the SonarQube Quality Gate in CI.
+- Introduce ZERO new Sonar issues of severity Blocker/Critical/Major.
+- If you modify a file/method, fix any Sonar issues you encounter in the touched code (leave untouched areas alone unless trivial).
+- Do NOT use suppressions (//NOSONAR, @SuppressWarnings) unless:
+  - you explain why it’s a false positive or required, AND
+  - you add a short comment with justification + (optionally) a tracking ticket.
+
+## How to validate before opening/updating the PR
+Run the closest equivalent of our CI checks:
+- Build + tests:
+  - <put your real command here, e.g.> mvn -q -DskipTests=false verify
+- Static checks (if available locally):
+  - <spotbugs/checkstyle/eslint/etc>
+
+If Sonar analysis can be run locally in this repo, run it:
+- <example> mvn -q sonar:sonar
+- OR <example> sonar-scanner
+
+## Sonar-friendly coding rules (high signal)
+- Prefer small, readable methods; reduce cognitive complexity (extract helpers).
+- Avoid duplication (extract common code).
+- Handle nulls defensively; avoid NPE-prone chains.
+- Always close resources (use try-with-resources).
+- Don’t swallow exceptions; log with context or rethrow with meaning.
+- Use parameterized logging; don’t build log strings eagerly.
+- Use immutable/const where possible; avoid unused vars/params.
+- Keep tests updated when behavior changes.
+
+## PR notes
+In the PR description, include:
+- “SonarQube: expected PASS (no new issues)” or list any expected findings + rationale.
+```
+
+### One extra move that helps a lot
+
+Use **SonarQube for IDE / SonarLint in “Connected Mode”** so issues show up immediately while Copilot generates code—this tends to prevent most violations before CI runs. ([SonarSource][2])
+
+### If you’re also using Copilot *in the IDE* (not just the coding agent)
+
+Keep `AGENTS.md`, but consider also adding `.github/copilot-instructions.md` and (optionally) `.github/instructions/*.instructions.md` for repo-wide vs path-specific guidance. ([GitHub Docs][1])
+
+[1]: https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot "Adding repository custom instructions for GitHub Copilot - GitHub Docs"
+[2]: https://www.sonarsource.com/resources/library/github-copilot-ai-generated-code/ "GitHub Copilot & Ensuring Quality AI-Generated Code | Sonar"

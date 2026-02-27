@@ -1,0 +1,123 @@
+= Unit Testing & Coverage
+
+== JUnit
+* De-facto Standard
+
+== Diffblue Cover
+
+* AI-generated unit tests for Java
+* CI/CD integration
+* Speeds up coverage, reduces regressions
+
+== PiTest
+
+* Mutation testing validates test quality
+* Ensures tests catch real bugs
+* Slower runs, suited for CI pipelines
+
+=== AI Tools for Testing (Copilot)
+
+* Copilot – AI assistant in IDE
+** Scaffolds tests & assertions
+** Depends on prompts & review
+
+== Considerations
+
+* High coverage is different than high quality
+* We should always aim for high quality
+* If your tests never FAIL, do they really test?
+* Diffblue tests are made to pass; many times tests only have a skeleton.
+* It may struggle when multiple beans of the same type exist (typical Spring apps; `@Qualifier` helps).
+* It won’t fix code automatically; AI copilots can assist, but still require review.
+
+=== Example: A “WrongLogic” bug, tests, and the recommended fix
+
+**WrongLogicTest.java** (example generated test)
+
+[source,java]
+----
+public class WrongLogicTest {
+
+  /**
+   * Test {@link WrongLogic#add(int, int)}.
+   * <ul>
+   *   <li>When two.</li>
+   *   <li>Then return five.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link WrongLogic#add(int, int)}
+   */
+  @Test
+  public void testAdd_whenTwo_thenReturnFive() {
+    // Arrange, Act and Assert
+    assertEquals(5, (new WrongLogic()).add(2, 2));
+  }
+}
+----
+
+**WrongLogic.java** (buggy implementation)
+
+[source,java]
+----
+public class WrongLogic {
+
+  public int add(int a, int b) {
+    return a + b + 1;
+  }
+}
+----
+
+**WrongLogicTest.java** (AI assistant example tests)
+
+[source,java]
+----
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class WrongLogicTest {
+
+  private final WrongLogic wrongLogic = new WrongLogic();
+
+  @Test
+  void add_ShouldReturnIncorrectSum_DueToLogicError() {
+    // This test demonstrates the current incorrect behavior
+    assertEquals(5, wrongLogic.add(2, 2),
+        "Current implementation incorrectly adds 1 to the sum");
+  }
+
+  @Test
+  void add_ExpectedCorrectBehavior() {
+    // This test shows what the expected behavior should be
+    assertNotEquals(4, wrongLogic.add(2, 2),
+        "Method should return 4 for inputs (2,2), but returns 5");
+  }
+
+  @Test
+  void add_WithZeroValues() {
+    // Even with zero values, result is still off by 1
+    assertEquals(1, wrongLogic.add(0, 0),
+        "Adding 0 + 0 should return 0, but returns 1");
+  }
+}
+
+----
+
+Test Explanation (from the deck):
+
+. `add_ShouldReturnIncorrectSum_DueToLogicError` documents the current incorrect behavior.
+. `add_ExpectedCorrectBehavior` shows that the method fails to meet expected behavior.
+. `add_WithZeroValues` tests the edge case with zero values.
+. `add_WithNegativeNumbers` tests behavior with negative numbers.
+
+Recommendation: The `add` method should be corrected to:
+
+[source,java]
+----
+public int add(int a, int b) {
+  return a + b; // Remove the +1 to fix the logic error
+}
+----
+
+'''
+link:060_Static_Analysis_and_Security.adoc[Previous] | link:080_Technical_Debt_and_Modernization.adoc[Next]

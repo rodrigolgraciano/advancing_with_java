@@ -1,0 +1,17 @@
+= A Typical Developer’s Day
+
+:icons: font
+
+[.big]
+== A typical developer day is :
+
+=== ⏺ &nbsp; Writing code
+=== ⏺ &nbsp; CI/CD
+=== ⏺ &nbsp; Meetings
+=== ⏺ &nbsp; User Requests
+=== ⏺ &nbsp; Juggling Deadlines
+
+'''
+====
+link:020_The_Developer_Reality.adoc[Next]
+====

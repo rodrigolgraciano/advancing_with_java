@@ -1,0 +1,31 @@
+= Static Analysis & Security
+
+:icons: font
+
+[.big]
+== Several Tools exist with some key points:
+=== ⏺ &nbsp; Mature, widely adopted
+=== ⏺ &nbsp; Big ecosystem, rich dashboards
+=== ⏺ &nbsp; Requires setup & maintenance
+=== ⏺ &nbsp; Possible to hint to AI agents
+
+=== Tool examples
+==== • Qodana (Jetbrains)
+==== • Snyk
+==== • Checkstyle
+==== • Dependabot
+
+
+Common issue types highlighted:
+
+* SQL Injection
+* Path traversal
+* Hardcoded credentials
+* IaC issues (e.g., public ports, missing encryption at rest)
+* Sensitive data exposure (e.g., exposing entities instead of using DTOs)
+* OSS vulnerabilities
+
+
+
+'''
+link:050_About_Speakers.adoc[Previous] | link:070_Unit_Testing_and_Coverage.adoc[Next]

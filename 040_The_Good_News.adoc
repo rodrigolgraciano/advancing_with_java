@@ -1,0 +1,15 @@
+= The Good News
+
+:icons: font
+
+[.big]
+== There is good news!
+=== ⏺ &nbsp; Tools evolving to help developers
+=== ⏺ &nbsp; Open-source + commercial ecosystems
+=== ⏺ &nbsp; Goal: Productivity + Compliance + Quality
+=== ⏺ &nbsp; AI agents can help
+
+'''
+====
+link:030_The_Problem.adoc[Previous] | link:050_About_Speakers.adoc[Next]
+====

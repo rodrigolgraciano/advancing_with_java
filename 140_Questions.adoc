@@ -1,0 +1,10 @@
+= Questions?
+
+:icons: font
+
+Thank you for joining *Beyond Coding*!
+
+* Slides: https://speakerdeck.com/graciano
+
+'''
+link:130_Resources_and_References.adoc[Previous]

@@ -1,0 +1,31 @@
+== Resources & References
+
+:icons: font
+
+
+=== Unit Testing
+
+* Diffblue Cover → https://www.diffblue.com
+* EvoSuite → https://www.evosuite.org
+* PiTest → https://pitest.org
+* GitHub Copilot → https://github.com/features/copilot
+
+=== Technical Debt / Modernization
+
+* OpenRewrite → https://docs.openrewrite.org
+* Moderne → https://moderne.io
+* Qodana → https://www.jetbrains.com/qodana
+
+=== Static Analysis & Security
+
+* SonarQube → https://www.sonarsource.com/products/sonarqube
+* Checkstyle → https://checkstyle.sourceforge.io
+* PMD → https://pmd.github.io
+
+=== AI Tools
+
+* Amazon Q → https://aws.amazon.com/q
+* Windsurf → https://windsurf.ai
+
+'''
+link:120_Key_Takeaways.adoc[Previous] | link:140_Questions.adoc[Next]

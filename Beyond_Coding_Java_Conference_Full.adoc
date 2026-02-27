@@ -1,0 +1,290 @@
+= Beyond Coding: Tools that Empower Java Developers in (Big) Corporations
+Rodrigo Graciano
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:experimental:
+
+// == The Golden Path
+//
+// * Test Coverage
+// * Technical Debt
+// * Vulnerabilities
+
+== The Developer Reality
+
+=== A Typical Developer’s Day
+
+A typical day is full of non-coding work:
+
+* Writing code
+* CI/CD - Human input
+* Meetings
+* User Requests
+* Deadlines
+
+How much time do we spend coding?
+
+=== Reality Check
+
+* Only ~30% or less of dev time spent coding
+* Meetings and user requests ~20–40% of dev time
+* Other tasks
+
+== The Problem
+
+* Handling vulnerabilities, upgrades, audits
+* Quality metrics: coverage, tech debt, security
+
+== The Good News
+
+* Tools evolving to help developers
+* Open-source + commercial ecosystems
+* Goal: Productivity + Compliance + Quality
+* AI can help
+
+== About the Authors
+
+* Java Champion (since 2022)
+* Oracle ACE Director
+* Java Community Process EC Member
+* Technical Editor of _Real-World Java_
+* Speaker at JavaOne, Devnexus, JNation, TDC, dev2next
+* Focus: Developer productivity, AI adoption, modernization
+
+== Static Analysis & Security
+
+=== SonarQube
+
+* Mature, widely adopted
+* Big ecosystem, rich dashboards
+* Requires setup & maintenance
+* Possible to hint to AI agents
+
+=== Qodana
+
+* Deep JetBrains integration
+* Static native analyzer
+* Cloud/on-prem plugin/CI
+* Same alerts you see in IntelliJ will show up in Qodana
+
+=== Checkstyle
+
+* Lightweight, flexible rule config
+* Style-focused
+* Limited scope
+
+=== Dependabot
+
+* Automates dependency updates via pull requests
+* Highlights known vulnerabilities in dependencies
+* Native to GitHub, easy CI/CD integration
+
+=== Snyk
+
+* Scans code, dependencies, containers, and IaC for vulnerabilities
+* Provides remediation guidance and patches
+* Broad ecosystem support, integrates with IDEs, repos, CI/CD
+
+Common issue types highlighted:
+
+* SQL Injection
+* Path traversal
+* Hardcoded credentials
+* IaC issues (e.g., public ports, missing encryption at rest)
+* Sensitive data exposure (e.g., exposing entities instead of using DTOs)
+* OSS vulnerabilities
+
+== Unit Testing & Coverage
+
+=== JUnit
+* De-facto Standard
+
+=== Diffblue Cover
+
+* AI-generated unit tests for Java
+* CI/CD integration
+* Speeds up coverage, reduces regressions
+
+=== PiTest
+
+* Mutation testing validates test quality
+* Ensures tests catch real bugs
+* Slower runs, suited for CI pipelines
+
+=== AI Tools for Testing (Copilot)
+
+* Copilot – AI assistant in IDE
+** Scaffolds tests & assertions
+** Depends on prompts & review
+
+=== Considerations
+
+* High coverage is different than high quality
+* We should always aim for high quality
+* If your tests never FAIL, do they really test?
+
+Additional notes from the original deck:
+
+* Diffblue tests are made to pass; many times tests only have a skeleton.
+* It may struggle when multiple beans of the same type exist (typical Spring apps; `@Qualifier` helps).
+* It won’t fix code automatically; AI copilots can assist, but still require review.
+
+=== Example: A “WrongLogic” bug, tests, and the recommended fix
+
+**WrongLogicTest.java** (example generated test)
+
+[source,java]
+----
+public class WrongLogicTest {
+
+  /**
+   * Test {@link WrongLogic#add(int, int)}.
+   * <ul>
+   *   <li>When two.</li>
+   *   <li>Then return five.</li>
+   * </ul>
+   * <p>
+   * Method under test: {@link WrongLogic#add(int, int)}
+   */
+  @Test
+  public void testAdd_whenTwo_thenReturnFive() {
+    // Arrange, Act and Assert
+    assertEquals(5, (new WrongLogic()).add(2, 2));
+  }
+}
+----
+
+**WrongLogic.java** (buggy implementation)
+
+[source,java]
+----
+public class WrongLogic {
+
+  public int add(int a, int b) {
+    return a + b + 1;
+  }
+}
+----
+
+**WrongLogicTest.java** (AI assistant example tests)
+
+[source,java]
+----
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class WrongLogicTest {
+
+  private final WrongLogic wrongLogic = new WrongLogic();
+
+  @Test
+  void add_ShouldReturnIncorrectSum_DueToLogicError() {
+    // This test demonstrates the current incorrect behavior
+    assertEquals(5, wrongLogic.add(2, 2),
+        "Current implementation incorrectly adds 1 to the sum");
+  }
+
+  @Test
+  void add_ExpectedCorrectBehavior() {
+    // This test shows what the expected behavior should be
+    assertNotEquals(4, wrongLogic.add(2, 2),
+        "Method should return 4 for inputs (2,2), but returns 5");
+  }
+
+  @Test
+  void add_WithZeroValues() {
+    // Even with zero values, result is still off by 1
+    assertEquals(1, wrongLogic.add(0, 0),
+        "Adding 0 + 0 should return 0, but returns 1");
+  }
+}
+
+----
+
+Test Explanation (from the deck):
+
+. `add_ShouldReturnIncorrectSum_DueToLogicError` documents the current incorrect behavior.
+. `add_ExpectedCorrectBehavior` shows that the method fails to meet expected behavior.
+. `add_WithZeroValues` tests the edge case with zero values.
+. `add_WithNegativeNumbers` tests behavior with negative numbers.
+
+Recommendation: The `add` method should be corrected to:
+
+[source,java]
+----
+public int add(int a, int b) {
+  return a + b; // Remove the +1 to fix the logic error
+}
+----
+
+== Technical Debt & Modernization
+
+=== OpenRewrite
+
+* Recipes for automated Java/Spring migrations
+* OSS foundation, scalable
+* Requires recipe upkeep
+
+=== Sourcegraph
+
+* Automates large-scale code modifications
+* Integrates with code hosts (GitHub, GitLab, Bitbucket, etc.)
+* Commercial license
+
+=== Manual Refactoring
+
+* Full control
+* Very time-consuming
+* Error-prone and inconsistent
+
+== Real-World Impact
+
+* //TODO
+
+== How to Choose Tools
+
+* Integration with IDE/CI/CD
+* Cost: open-source vs paid
+* Ecosystem & community
+* Security & compliance needs
+
+== Key Takeaways
+
+* Tools reduce compliance vs innovation trade-off
+* OSS + AI + enterprise solutions = strong toolkit
+* Focus on innovation, not drudgery
+
+== Resources & References
+
+=== Unit Testing
+
+* Diffblue Cover → https://www.diffblue.com
+* EvoSuite → https://www.evosuite.org
+* PiTest → https://pitest.org
+* GitHub Copilot → https://github.com/features/copilot
+
+=== Technical Debt / Modernization
+
+* OpenRewrite → https://docs.openrewrite.org
+* Moderne → https://moderne.io
+* Qodana → https://www.jetbrains.com/qodana
+
+=== Static Analysis & Security
+
+* SonarQube → https://www.sonarsource.com/products/sonarqube
+* Checkstyle → https://checkstyle.sourceforge.io
+* PMD → https://pmd.github.io
+
+=== AI Tools
+
+* Amazon Q → https://aws.amazon.com/q
+* Windsurf → https://windsurf.ai
+
+== Questions?
+
+Thank you for joining *Beyond Coding*!
+
+* Slides: https://speakerdeck.com/graciano

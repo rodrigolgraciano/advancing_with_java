@@ -1,0 +1,10 @@
+= Key Takeaways
+
+:icons: font
+
+* Tools reduce compliance vs innovation trade-off
+* OSS + AI + enterprise solutions = strong toolkit
+* Focus on innovation, not drudgery
+
+'''
+link:110_How_to_Choose_Tools.adoc[Previous] | link:130_Resources_and_References.adoc[Next]

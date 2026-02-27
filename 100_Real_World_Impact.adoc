@@ -1,0 +1,10 @@
+= Real-World Impact
+
+:icons: font
+
+* Code coverage nearly doubled in 1 year
+* Release frequency increased by 50%
+* Java upgrades cut from weeks to days
+
+'''
+link:090_AI_Tools.adoc[Previous] | link:110_How_to_Choose_Tools.adoc[Next]

@@ -1,0 +1,15 @@
+= A Developer’s Reality
+
+:icons: font
+
+[.big]
+== A reality check
+
+=== ⏺ &nbsp; Only ~30% or less of dev time spent coding
+=== ⏺ &nbsp; Meetings and user requests ~20–40% of dev time
+=== ⏺ &nbsp; Other tasks
+
+'''
+====
+link:010_The_Developer_Day.adoc[Previous] | link:030_The_Problem.adoc[Next]
+====

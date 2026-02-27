@@ -1,0 +1,107 @@
+= Suggest an agents.md while generating OpenRewrite recipes
+
+How can I suggest an `agents.md` while generating OpenRewrite recipes for upgrading Java? Create a recipe to upgrade to latest Java features, but do not use the "var". For JUnit 4 -> 5 replace all test method signatures to not have the "test" prefix.
+
+Here's a solid `agents.md` you can drop into your repo to steer an agent (Copilot, Cursor, etc.) while it generates OpenRewrite recipes for:
+
+* upgrading to the latest Java target via OpenRewrite's composite migration recipe (currently Java **25**) (link:https://docs.openrewrite.org/recipes/java/migrate/upgradetojava25[OpenRewrite Docs])
+* **never** introducing `var` (i.e., don't activate any `UseVar`/`...var...` recipes) (link:https://docs.openrewrite.org/recipes/java/migrate/lang/usevar?utm_source=chatgpt.com[OpenRewrite Docs])
+* migrating **JUnit 4 -> JUnit 5** and removing the `test` method-name prefix (link:https://docs.openrewrite.org/recipes/java/testing/junit5/junit4to5migration?utm_source=chatgpt.com[OpenRewrite Docs])
+
+[source,markdown]
+----
+# agents.md — OpenRewrite recipe generation guardrails
+
+## Mission
+Generate OpenRewrite recipes (prefer declarative YAML) to modernize this codebase:
+1) Upgrade Java to the latest supported target (currently Java 25 via OpenRewrite composite recipes).
+2) Migrate tests from JUnit 4 to JUnit 5.
+3) After JUnit 5 migration, rename test methods so they do **not** start with the "test" prefix.
+4) Do **not** introduce `var` anywhere (recipes, generated code, or refactors).
+
+## Hard rules (non-negotiable)
+- ❌ Do NOT add/activate any recipe that introduces `var`:
+  - `org.openrewrite.java.migrate.lang.UseVar`
+  - anything under `org.openrewrite.java.migrate.lang.var.*`
+- ❌ Do NOT manually refactor code to use `var`.
+- ✅ Keep transformations mechanical and behavior-preserving (no business-logic changes).
+- ✅ Recipes must be idempotent (re-running should yield no further changes).
+
+## Required recipe outputs
+Create/maintain a `rewrite.yml` containing these composites:
+
+### 1) Java upgrade (no var)
+- Use OpenRewrite’s Java migration composite for the latest target:
+  - `org.openrewrite.java.migrate.UpgradeToJava25`
+- Add hygiene steps after:
+  - `org.openrewrite.java.RemoveUnusedImports`
+  - `org.openrewrite.java.format.AutoFormat`
+
+### 2) JUnit 4 → 5 + remove test prefix
+Run in this order:
+1. `org.openrewrite.java.testing.junit5.JUnit4to5Migration`
+2. `org.openrewrite.java.testing.cleanup.RemoveTestPrefix`
+3. `org.openrewrite.java.RemoveUnusedImports`
+4. `org.openrewrite.java.format.AutoFormat`
+
+### 3) Optional convenience “all-in-one”
+A single recipe that chains the Java upgrade + test migration recipes.
+
+## Verification checklist
+- Search the diff for `var ` (word boundary) — must be zero new occurrences.
+- JUnit tests compile and run after migration.
+- Methods like `testSomething()` become `something()` when annotated with JUnit 5 `@Test`/`@ParameterizedTest`/etc.
+- No unused imports remain; formatting is stable.
+
+## Running recipes (keep docs accurate)
+When adding build configuration examples, include BOTH recipe artifacts:
+- `org.openrewrite.recipe:rewrite-migrate-java` (Java upgrades)
+- `org.openrewrite.recipe:rewrite-testing-frameworks` (JUnit migration + RemoveTestPrefix)
+
+Prefer referencing an org-level composite recipe from `rewrite.yml` as the active recipe.
+----
+
+And here's a matching `rewrite.yml` that implements exactly what you asked:
+
+[source,yaml]
+----
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.java.UpgradeToJava25NoVar
+displayName: Upgrade to Java 25 (no var)
+description: >
+  Upgrade build + code to Java 25 using OpenRewrite's composite migration recipe.
+  Explicitly does not activate any var-introducing recipes.
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeToJava25
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.format.AutoFormat
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.testing.JUnit4to5NoTestPrefix
+displayName: Migrate JUnit 4 to JUnit 5 and remove 'test' method prefix
+description: >
+  Migrates JUnit 4 tests to JUnit Jupiter and renames test methods so they do not
+  start with 'test' (JUnit 5 doesn't require that prefix).
+recipeList:
+  - org.openrewrite.java.testing.junit5.JUnit4to5Migration
+  - org.openrewrite.java.testing.cleanup.RemoveTestPrefix
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.format.AutoFormat
+
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.yourorg.ModernizeJavaAndTests
+displayName: Modernize Java + Tests (Java 25, JUnit 5, no 'test' prefix, no var)
+description: Convenience recipe that applies both the Java and test migrations.
+recipeList:
+  - com.yourorg.java.UpgradeToJava25NoVar
+  - com.yourorg.testing.JUnit4to5NoTestPrefix
+----
+
+Notes on why these exact recipe names/orderings:
+
+* `UpgradeToJava25` is OpenRewrite's current "migrate to Java 25" composite. (link:https://docs.openrewrite.org/recipes/java/migrate/upgradetojava25[OpenRewrite Docs])
+* `RemoveTestPrefix` is the purpose-built recipe for dropping `test*` prefixes on JUnit 5 test methods. (link:https://docs.openrewrite.org/recipes/java/testing/cleanup/removetestprefix[OpenRewrite Docs])
+* Avoiding `var` is accomplished by **not** activating `UseVar` or any `...lang.var...` recipes. (link:https://docs.openrewrite.org/recipes/java/migrate/lang/usevar?utm_source=chatgpt.com[OpenRewrite Docs])
